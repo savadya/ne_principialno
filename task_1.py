@@ -7,10 +7,12 @@ import requests
 coord = ['37.628070', '55.750630']
 height, width = 600, 450
 scale = 15
+layer = 'map'
 
 
 def update_image():
-    map_request = f"https://static-maps.yandex.ru/1.x/?ll={coord[0]},{coord[1]}&z={scale}&size={height},{width}&l=map"
+    map_request = f"https://static-maps.yandex.ru/1.x/?ll={coord[0]},{coord[1]}&z={scale}&size={height},{width}&l=" \
+                  f"{layer}"
 
     response = requests.get(map_request)
     if not response:
@@ -25,6 +27,10 @@ def update_image():
     screen.blit(pygame.image.load(map_file), (0, 0))
 
     return map_file
+
+
+#def button():
+#    screen.fill(pygame.Color('#C9C9C9'), (425, 5, 20, 100))
 
 
 pygame.init()
@@ -42,24 +48,25 @@ while run:
             if event.key == pygame.K_PAGEUP:
                 if scale < 17:
                     scale += 1
-                    map_file = update_image()
             if event.key == pygame.K_PAGEDOWN:
                 if scale > 1:
                     scale -= 1
-                    map_file = update_image()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
                     coord[1] = str(float(coord[1]) + 0.008 * math.pow(2, 15 - scale))
-                    map_file = update_image()
                 if event.key == pygame.K_DOWN:
                     coord[1] = str(float(coord[1]) - 0.008 * math.pow(2, 15 - scale))
-                    map_file = update_image()
                 if event.key == pygame.K_RIGHT:
                     coord[0] = str(float(coord[0]) + 0.008 * math.pow(2, 15 - scale))
-                    map_file = update_image()
                 if event.key == pygame.K_LEFT:
                     coord[0] = str(float(coord[0]) - 0.008 * math.pow(2, 15 - scale))
-                    map_file = update_image()
-            print(scale)
+                if event.key == pygame.K_m:
+                    layer = "map"
+                if event.key == pygame.K_s:
+                    layer = "sat"
+                if event.key == pygame.K_g:
+                    layer = "sat,skl"
+            map_file = update_image()
+#            button()
     pygame.display.flip()
 pygame.quit()
