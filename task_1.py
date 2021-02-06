@@ -49,16 +49,16 @@ while run:
                     map_file = update_image()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
-                    coord[1] = str(float(coord[1]) + math.pow(2, 15 - scale))
+                    coord[1] = str(float(coord[1]) + 0.008 * math.pow(2, 15 - scale))
                     map_file = update_image()
                 if event.key == pygame.K_DOWN:
-                    coord[1] = str(float(coord[1]) - math.pow(2, 15 - scale))
+                    coord[1] = str(float(coord[1]) - 0.008 * math.pow(2, 15 - scale))
                     map_file = update_image()
                 if event.key == pygame.K_RIGHT:
-                    coord[0] = str(float(coord[0]) + math.pow(2, 15 - scale))
+                    coord[0] = str(float(coord[0]) + 0.008 * math.pow(2, 15 - scale))
                     map_file = update_image()
                 if event.key == pygame.K_LEFT:
-                    coord[0] = str(float(coord[0]) - math.pow(2, 15 - scale))
+                    coord[0] = str(float(coord[0]) - 0.008 * math.pow(2, 15 - scale))
                     map_file = update_image()
             print(scale)
     pygame.display.flip()
