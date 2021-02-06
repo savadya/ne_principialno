@@ -4,16 +4,15 @@ import sys
 import pygame
 import requests
 
-coord = ('37.628070', '55.750630')
+coord = ['37.628070', '55.750630']
 height, width = 600, 450
 scale = 15
 
 
 def update_image():
     map_request = f"https://static-maps.yandex.ru/1.x/?ll={coord[0]},{coord[1]}&z={scale}&size={height},{width}&l=map"
-    
-    response = requests.get(map_request)
 
+    response = requests.get(map_request)
     if not response:
         print("Ошибка выполнения запроса:")
         print(map_request)
@@ -48,9 +47,18 @@ while run:
                 if scale > 1:
                     scale -= 1
                     map_file = update_image()
-
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    coord[1] = str(float(coord[1]) + height/1000)
+                    map_file = update_image()
+                if event.key == pygame.K_DOWN:
+                    coord[1] = str(float(coord[1]) - height/1000)
+                    map_file = update_image()
+                if event.key == pygame.K_RIGHT:
+                    coord[0] = str(float(coord[0]) + height/1000)
+                    map_file = update_image()
+                if event.key == pygame.K_LEFT:
+                    coord[0] = str(float(coord[0]) - height/1000)
+                    map_file = update_image()
     pygame.display.flip()
 pygame.quit()
-
-
-os.remove(map_file)
