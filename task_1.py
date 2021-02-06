@@ -4,10 +4,12 @@ import sys
 import pygame
 import requests
 
-coord = ('37.530887', '55.703118')
+coord = ('37.628070', '55.750630')
 height, width = 600, 450
+scale = 15
 
-map_request = f"http://static-maps.yandex.ru/1.x/?ll={coord[0]},{coord[1]}&spn=0.002,0.002&l=map&size={height},{width}"
+map_request = f"https://static-maps.yandex.ru/1.x/?ll={coord[0]},{coord[1]}&z={scale}&size={height},{width}&l=map"
+print(map_request)
 response = requests.get(map_request)
 
 if not response:
