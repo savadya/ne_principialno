@@ -18,6 +18,31 @@ if not response:
     print("Http статус:", response.status_code, "(", response.reason, ")")
     sys.exit(1)
 
+# Преобразуем ответ в json-объект
+json_response = response.json()
+# Получаем первый топоним из ответа геокодера.
+toponym = json_response["response"]["GeoObjectCollection"][
+    "featureMember"][0]["GeoObject"]
+# Координаты центра топонима:
+toponym_coodrinates = toponym["Point"]["pos"]
+# Долгота и широта:
+toponym_longitude, toponym_lattitude = toponym_coodrinates.split(" ")
+
+delta1 = toponym['boundedBy']['Envelope']['lowerCorner'].split()
+delta2 = toponym['boundedBy']['Envelope']['upperCorner'].split()
+org_point = toponym['Point']['pos']
+org_point[0], org_point[1] = float(org_point[0]), float(org_point[1])
+delta1[0], delta1[1] = float(delta1[0]), float(delta1[1])
+delta2[0], delta2[1] = float(delta2[0]), float(delta2[1])
+delta = [str(delta2[0] - delta1[0]), str(delta2[1] - delta1[1])]
+# Собираем параметры для запроса к StaticMapsAPI:
+
+map_params = {
+    "ll": ",".join([toponym_longitude, toponym_lattitude]),
+    "spn": ",".join([str(delta2[0] - delta1[0]), str(delta2[1] - delta1[1])]),
+    "l": "map",
+    "pt": ",".join([toponym_longitude, toponym_lattitude])
+}
 
 map_file = "map.png"
 with open(map_file, "wb") as file:
@@ -35,7 +60,23 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                coord[1] += width
+            if event.key == pygame.K_DOWN:
+                coord[1] -= width
+            if event.key == pygame.K_RIGHT:
+                coord[0] -= width
+            if event.key == pygame.K_LEFT:
+                coord[0] += width
+            if event.key == pygame.K_PAGEUP:
+                pass
+            if event.key == pygame.K_PAGEDOWN:
+                pass
+            if event.key == pygame.K_m:
+                map_params["l"] = "map"
+            if event.key == pygame.K_s:
+                map_params["l"] = "sat"
     pygame.display.flip()
 while pygame.event.wait().type != pygame.QUIT:
     pass
