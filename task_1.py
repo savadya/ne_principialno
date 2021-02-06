@@ -28,18 +28,18 @@ toponym_coodrinates = toponym["Point"]["pos"]
 # Долгота и широта:
 toponym_longitude, toponym_lattitude = toponym_coodrinates.split(" ")
 
-delta1 = toponym['boundedBy']['Envelope']['lowerCorner'].split()
-delta2 = toponym['boundedBy']['Envelope']['upperCorner'].split()
+d1 = toponym['boundedBy']['Envelope']['lowerCorner'].split()
+d2 = toponym['boundedBy']['Envelope']['upperCorner'].split()
 org_point = toponym['Point']['pos']
 org_point[0], org_point[1] = float(org_point[0]), float(org_point[1])
-delta1[0], delta1[1] = float(delta1[0]), float(delta1[1])
-delta2[0], delta2[1] = float(delta2[0]), float(delta2[1])
-delta = [str(delta2[0] - delta1[0]), str(delta2[1] - delta1[1])]
+d1[0], d1[1] = float(d1[0]), float(d1[1])
+d2[0], d2[1] = float(d2[0]), float(d2[1])
+delta = [str(d2[0] - d1[0]), str(d2[1] - d1[1])]
 # Собираем параметры для запроса к StaticMapsAPI:
 
 map_params = {
     "ll": ",".join([toponym_longitude, toponym_lattitude]),
-    "spn": ",".join([str(delta2[0] - delta1[0]), str(delta2[1] - delta1[1])]),
+    "spn": ",".join(delta),
     "l": "map",
     "pt": ",".join([toponym_longitude, toponym_lattitude])
 }
@@ -47,7 +47,6 @@ map_params = {
 map_file = "map.png"
 with open(map_file, "wb") as file:
     file.write(response.content)
-
 
 pygame.init()
 screen = pygame.display.set_mode((height, width))
@@ -81,6 +80,5 @@ while run:
 while pygame.event.wait().type != pygame.QUIT:
     pass
 pygame.quit()
-
 
 os.remove(map_file)
