@@ -25,10 +25,12 @@ def update_image():
         file.write(response.content)
     screen.blit(pygame.image.load(map_file), (0, 0))
 
+    return map_file
+
 
 pygame.init()
 screen = pygame.display.set_mode((height, width))
-update_image()
+map_file = update_image()
 
 pygame.display.flip()
 run = True
@@ -41,11 +43,11 @@ while run:
             if event.key == pygame.K_PAGEUP:
                 if scale < 17:
                     scale += 1
-                    update_image()
+                    map_file = update_image()
             if event.key == pygame.K_PAGEDOWN:
                 if scale > 1:
                     scale -= 1
-                    update_image()
+                    map_file = update_image()
 
     pygame.display.flip()
 pygame.quit()
